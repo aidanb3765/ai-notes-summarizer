@@ -1,0 +1,1 @@
+Python is a powerful programming language used for AI, web development, and data science. Its simple syntax makes it beginner-friendly, yet it’s versatile enough for advanced projects.
