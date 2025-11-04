@@ -28,15 +28,26 @@ def run(file: str):
     console.print(summary)
     save_note(file_path.stem, text, summary)
 
-# Define the 'list' command to list all saved summaries
+# Define the 'list' command to list all saved summaries into a table
 @app.command()
 def list():
-    """List all saved summaries."""
-    from storage import list_notes
+    """List all saved notes in a table."""
     notes = list_notes()
-    for note in notes:
-        console.print(f"[bold]{note['title']}[/bold]")
-        console.print(f"Summary: {note['summary']}\n")
+    if not notes:
+        console.print("[yellow]No notes saved yet.[/yellow]")
+        return
+
+    table = Table(title="Saved Notes")
+    table.add_column("Index", justify="center", style="cyan")
+    table.add_column("Title", style="bold")
+    table.add_column("Timestamp", style="green")
+    table.add_column("Summary Snippet", style="dim")
+
+    for idx, note in enumerate(notes, 1):
+        snippet = note["summary"][:100] + "..." if len(note["summary"]) > 100 else note["summary"]
+        table.add_row(str(idx), note["title"], note["timestamp"], snippet)
+
+    console.print(table)
 
 # Define the 'view' command to view a specific saved summary
 @app.command()

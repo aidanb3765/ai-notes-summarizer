@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-DATA_FILE = Path("notes.json")
+DATA_FILE = Path(__file__).parent / "notes.json"
 
 def _load_data():
     if DATA_FILE.exists():
@@ -37,7 +37,7 @@ def get_note(title: str):
 
 def delete_note(title: str):
     """Delete a note by title, with selection if multiple exist."""
-    notes = load_notes()
+    notes = _load_data()  # use _load_data() instead of load_notes()
     matches = [n for n in notes if title.lower() in n["title"].lower()]
 
     if not matches:
@@ -48,7 +48,7 @@ def delete_note(title: str):
         confirm = input(f"Delete '{matches[0]['title']}' ({matches[0]['timestamp']})? (y/n): ").strip().lower()
         if confirm == "y":
             notes.remove(matches[0])
-            save_notes(notes)
+            _save_data(notes)  # use _save_data() instead of save_notes()
             print("Note deleted.")
         return
 
@@ -63,7 +63,7 @@ def delete_note(title: str):
 
     note_to_delete = matches[int(choice) - 1]
     notes.remove(note_to_delete)
-    save_notes(notes)
+    _save_data(notes)
     print(f"Deleted '{note_to_delete['title']}' ({note_to_delete['timestamp']}).")
 
 def search_notes(keyword: str):
