@@ -11,7 +11,6 @@ console = Console()
 summarize_cli = typer.Typer()
 app.add_typer(summarize_cli, name="summarize")
 
-
 @summarize_cli.command(name="run")
 def run(file: str):
     """Summarize a text file."""
@@ -27,6 +26,14 @@ def run(file: str):
     console.print(summary)
     save_note(file_path.stem, text, summary)
 
+@app.command()
+def list():
+    """List all saved summaries."""
+    from storage import list_notes
+    notes = list_notes()
+    for note in notes:
+        console.print(f"[bold]{note['title']}[/bold]")
+        console.print(f"Summary: {note['summary']}\n")
 
 if __name__ == "__main__":
     app()
